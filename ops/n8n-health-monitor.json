@@ -1,0 +1,129 @@
+{
+    "name": "Sovereign-Health Node Monitor Agent",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "field": "minutes",
+                            "minutesInterval": 5
+                        }
+                    ]
+                }
+            },
+            "name": "Cron",
+            "type": "n8n-nodes-base.cron",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "http://localhost:4000/api/status",
+                "method": "GET"
+            },
+            "name": "Check Aggregator",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "boolean": [
+                        {
+                            "value1": "={{$json.active}}",
+                            "value2": true
+                        }
+                    ]
+                }
+            },
+            "name": "Is Training Stuck?",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "content": "Alert: The Federated Learning round has been stuck on 'active' for over 5 minutes. Initializing self-healing...",
+                "username": "Sovereign AI Agent"
+            },
+            "name": "Slack Alert",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                850,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "command": "docker restart sovereign-health-aggregator"
+            },
+            "name": "Self-Heal (Restart Container)",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                200
+            ]
+        }
+    ],
+    "connections": {
+        "Cron": {
+            "main": [
+                [
+                    {
+                        "node": "Check Aggregator",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Check Aggregator": {
+            "main": [
+                [
+                    {
+                        "node": "Is Training Stuck?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Is Training Stuck?": {
+            "main": [
+                [
+                    {
+                        "node": "Slack Alert",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Slack Alert": {
+            "main": [
+                [
+                    {
+                        "node": "Self-Heal (Restart Container)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {}
+}
