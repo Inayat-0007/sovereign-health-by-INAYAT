@@ -27,12 +27,12 @@ def evaluate_fn(server_round: int, parameters: fl.common.NDArrays, config: dict)
 
 
 if __name__ == "__main__":
-    print("[Aggregator] ══════════════════════════════════════════")
+    print("[Aggregator] ==========================================")
     print("[Aggregator] Central FL Aggregator initializing...")
     print("[Aggregator] Strategy  : FedAvg (Federated Averaging)")
     print("[Aggregator] Rounds    : 3")
     print("[Aggregator] Min nodes : 3 hospitals")
-    print("[Aggregator] ══════════════════════════════════════════")
+    print("[Aggregator] ==========================================")
     
     strategy = fl.server.strategy.FedAvg(
         fraction_fit=1.0,
@@ -49,5 +49,5 @@ if __name__ == "__main__":
         strategy=strategy,
     )
     
-    print("[Aggregator] ✓ All rounds complete. Shutting down cleanly.")
+    print("[Aggregator] [OK] All rounds complete. Shutting down cleanly.")
     os._exit(0)

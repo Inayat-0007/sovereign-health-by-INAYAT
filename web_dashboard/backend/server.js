@@ -167,13 +167,13 @@ app.post('/api/trigger-round', (req, res) => {
                 // Auto-log this hospital's contribution to the blockchain
                 io.emit('training_log', { source: 'Blockchain', log: `Recording contribution from ${friendlyName} (Acc: ${(accuracy * 100).toFixed(1)}%)...` });
                 await logContribution(currentRoundNumber, hospital, accuracy);
-                io.emit('training_log', { source: 'Blockchain', log: `✓ ${friendlyName} contribution verified and mined.` });
+                io.emit('training_log', { source: 'Blockchain', log: `[OK] ${friendlyName} contribution verified and mined.` });
 
                 if (clientsCompleted === hospitals.length) {
                     setTimeout(() => {
                         isTrainingActive = false;
-                        io.emit('training_status', { active: false, message: `Federated Round #${currentRoundNumber} Complete ✓` });
-                        io.emit('training_log', { source: 'System', log: `══════ Round #${currentRoundNumber} finished. All contributions on-chain. ══════` });
+                        io.emit('training_status', { active: false, message: `Federated Round #${currentRoundNumber} Complete` });
+                        io.emit('training_log', { source: 'System', log: `====== Round #${currentRoundNumber} finished. All contributions on-chain. ======` });
                     }, 2000);
                 }
             });

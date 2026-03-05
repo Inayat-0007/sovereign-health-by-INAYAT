@@ -117,7 +117,7 @@ if __name__ == "__main__":
         sys.exit(1)
     
     friendly_name = hospital_name.replace("_", " ").title()
-    print(f"[Node {friendly_name}] ──────────────────────────────────────")
+    print(f"[Node {friendly_name}] --------------------------------------")
     print(f"[Node {friendly_name}] Preparing local data isolation...")
     
     train_loader, test_loader, num_train, num_test = load_data(data_path)
@@ -127,14 +127,14 @@ if __name__ == "__main__":
     
     print(f"[Node {friendly_name}] Connecting to FL Aggregator on 127.0.0.1:8080...")
     print(f"[Node {friendly_name}] Differential Privacy: noise=1.0, clip=1.0")
-    print(f"[Node {friendly_name}] ──────────────────────────────────────")
+    print(f"[Node {friendly_name}] --------------------------------------")
     
     try:
         fl.client.start_numpy_client(
             server_address="127.0.0.1:8080",
             client=SovereignHealthClient(model, train_loader, test_loader, num_train, num_test, friendly_name)
         )
-        print(f"[Node {friendly_name}] ✓ All FL rounds complete.")
+        print(f"[Node {friendly_name}] [OK] All FL rounds complete.")
     except Exception as e:
         print(f"[Node {friendly_name}] Connection failed: {e}")
         
